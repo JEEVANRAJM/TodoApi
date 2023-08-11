@@ -1,29 +1,32 @@
 import { useState } from "react";
-import Output  from "./components/Output";
+import Output from "./components/Output.js";
+
 
 function App() {
-  let [inputValue,setInputValue]= useState(""); //[state,setState] 
-  let [showValue,setShowValue]= useState(""); //[state,setState] 
 
-  const handleChange=(e)=>{
+ const [inputValue,setinputValue] =useState();//[state,setstate];
+ const [showValue,setShowValue] =useState();//[state,setstate];
+ 
+ 
+  const handleChange = (e)=>{
 
-    //console.log("value>>>",e.target.value);
-    //inputValue = e.target.value;
-    setInputValue(e.target.value);
+   
+  setinputValue(e.target.value)
+
   }
-  const handleClick=()=>{
-   setShowValue(inputValue);
+const handleClick = (e)=>{
+setShowValue(inputValue);
 
+}
+
+  return <div>
+    <input onChange={handleChange}/>
+    <button onClick={handleClick}>submit</button>
+  <Output value={showValue}/>
+    </div>
+ 
   }
   
-  return( 
-  <div>
-    <input onChange={handleChange}/> 
-    <button onClick={handleClick}>Clickme</button>
-    {/* <div>Result:{showValue}</div> */}
-    <Output value={showValue}/>
-  </div>
-  );
-}
+  
 
 export default App;

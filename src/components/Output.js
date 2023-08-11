@@ -1,8 +1,9 @@
-const Output = (props) =>{
 
-    //console.log("showValue>>>",props.value)
-   return <div>Result:{props.value}</div>
+const Output = (props) => {
+   // console.log("showvalue",props.value);
+  return (
+    <div>MYResult:{props.value}</div>
+  )
+};
 
-}
-
-export default Output;
+export default Output
