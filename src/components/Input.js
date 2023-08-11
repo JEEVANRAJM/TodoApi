@@ -1,10 +1,8 @@
-// accessing "handleChange" direclty as desture
-const Input = ({ handleChange }) => {
-    //props
-    //const {hanadleChange} = props;
-    //prop.handleChange
-  
-    return <input onChange={handleChange} />;
-  };
-  
-  export default Input;
+import React from 'react'
+
+const Input=({handleChange})=> {
+  return <input onChange={handleChange}/>;
+  }
+ 
+
+export default Input;

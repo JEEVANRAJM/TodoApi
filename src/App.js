@@ -1,5 +1,7 @@
 import { useState } from "react";
 import Output from "./components/Output.js";
+import Input from "./components/Input.js";
+import Button from "./components/Button.js";
 
 
 function App() {
@@ -20,8 +22,11 @@ setShowValue(inputValue);
 }
 
   return <div>
-    <input onChange={handleChange}/>
-    <button onClick={handleClick}>submit</button>
+    <Input handleChange={handleChange}/>
+    <Button handleClick={handleClick} />
+    {/* <input onChange={handleChange}/> */}
+    {/* <button onClick={handleClick}>submit</button> */}
+
   <Output value={showValue}/>
     </div>
  
