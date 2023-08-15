@@ -6,4 +6,4 @@ const Output = (props) => {
   )
 };
 
-export default Output
+export default Output;
