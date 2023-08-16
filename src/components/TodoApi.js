@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import UserDetails from "./UserDetails";
 
 const TodoApi = () => {
   const [users, setUsers] = useState([]); //intial value
-  const[selecteduser,setSelecteduser] = useState({});
+  const[selectedUser,setSelectedUser] = useState({});
   const[editUser,setEditUser] = useState({});
   
     useEffect(()=>{
@@ -24,8 +25,8 @@ const TodoApi = () => {
             let tempUsers = [...users];
             tempUsers = tempUsers.filter((user=>user.id !==id));
             setUsers(tempUsers); 
-            if(selecteduser.id===id){
-                setSelecteduser({});
+            if(selectedUser.id===id){
+                setSelectedUser({});
             }
 
             if(editUser.id===id){
@@ -57,9 +58,9 @@ const TodoApi = () => {
                         }
                     });
                     setUsers(tempUsers); 
-                    if(editUser.id===selecteduser.id){
+                    if(editUser.id===selectedUser.id){
 
-                        setSelecteduser(editUser);
+                        setSelectedUser(editUser);
 
 
                     }
@@ -77,52 +78,30 @@ const TodoApi = () => {
         //     setEditUser({...editUser,name:event.target.value});
         // }
 
-          }
 
-          const handleCreate = async () => {
-            const response = await fetch("https://jsonplaceholder.typicode.com/users", {
-              method: "POST",
-              body: JSON.stringify(editUser),
-              headers: {
-                "Content-type": "application/json; charset=UTF-8",
-              },
-            });
-        const newUser = await response.json();
-        setUsers((prevUser)=>[...prevUser,newUser]);
-            
-          };
+
+          }
 
       return( <div>
         TodoApi
        <div  style={{display:"flex"}}> 
        <div>
-        {users.map((user)=><li key={user.id}><span onClick={()=>setSelecteduser(user)}>{user.name}</span>
+        {users.map((user)=><li key={user.id}><span onClick={()=>setSelectedUser(user)}>{user.name}</span>
         <button onClick={(e)=>handleDelete(e,user.id)}>Delete</button>
         <button onClick={()=>handleEdit(user)}>Edit</button>
         </li>)}
        </div>
      
-        <div><b>User Details</b>
-        
-        {Object.keys(selecteduser).length >0 ? (
-         <div>
-{selecteduser.name}<br/>
-{selecteduser.phone}<br/>
-{selecteduser.email}
-</div> 
-        
-       ):(<div>No user selected</div>)}
-        <br/>
-
-        </div>
+       
 
       </div>
       <div style={{marginTop:"30px"}}>
      <label>Name:</label><input id ="name"value={editUser.name || "" } onChange={handleChange} /> <br/>
      <label>Phone:</label><input id="phone" value={editUser.phone || "" } onChange={handleChange} /> <br/>
      <label>Email:</label><input id="email" value={editUser.email || "" } onChange={handleChange} /> <br/>
-      <button onClick={handleCreate}>Create</button>
+      <button disabled={!editUser.id} onClick={handleUpdate}>Update</button>
       </div>
+      {selectedUser.name && <UserDetails user={selectedUser} onClose={()=>setSelectedUser({})}/>}
       </div>    
 )}
 
