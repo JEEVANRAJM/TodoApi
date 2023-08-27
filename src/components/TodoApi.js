@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import UserDetails from "./UserDetails";
+import CreateUpdate from "./CreateUpdate";
+import Modal from "./Modal";
 
 const TodoApi = () => {
   const [users, setUsers] = useState([]); //intial value
   const[selectedUser,setSelectedUser] = useState({});
   const[editUser,setEditUser] = useState({});
+  const [isEdit,setEdit]=useState(false);
+  const [isModalTwoOpen,setIsModalTwoOpen] =useState(false);
   
     useEffect(()=>{
         // console.log("users>>>",users);
-        fetch("https://jsonplaceholder.typicode.com/users")
+        fetch("http://localhost:3004/users")
         .then((response) => response.json())
         .then((json) => setUsers(json));
 
@@ -16,7 +20,7 @@ const TodoApi = () => {
 
     const handleDelete=(e,id)=>{
 
-        fetch(`https://jsonplaceholder.typicode.com/users/${id}`, {
+        fetch(`http://localhost:3004/users/${id}`, {
         method:"DELETE",
     })
         .then(response => response.json())
@@ -40,14 +44,18 @@ const TodoApi = () => {
 
     const handleUpdate=()=>{
            
-                fetch(`https://jsonplaceholder.typicode.com/users/${editUser.id}`, {
+                fetch(`http://localhost:3004/users/${editUser.id}`, {
                 method:"PUT",
                  body:JSON.stringify(editUser),
+                 headers: {
+                    "Content-type": "application/json; charset=UTF-8",
+                  },
                
             })
                 .then((response) => response.json())
                 .then((json) => {
-        
+                    
+                    setIsModalTwoOpen(false);
                     let tempUsers = [...users];
                     tempUsers = tempUsers.map((u) => {
                          if(u.id === editUser.id){
@@ -68,7 +76,9 @@ const TodoApi = () => {
                 });};
 
         const  handleEdit = (user)=>{
+            setIsModalTwoOpen(true);
             setEditUser(user);
+            setEdit(true);
 
         }
 
@@ -82,8 +92,33 @@ const TodoApi = () => {
 
           }
 
-      return( <div>
+          const handleCreate = async () => {
+            const response = await fetch("http://localhost:3004/users", {
+              method: "POST",
+              body: JSON.stringify(editUser),
+              headers: {
+                "Content-type": "application/json; charset=UTF-8",
+              },
+             
+            });
+        
+        const newUser =await response.json();
+        setIsModalTwoOpen(false);
+        setUsers((prevUser)=>[...prevUser,newUser]);    // setUsers([...users,newUser]);
+        setEditUser({});
+       
+          };
+
+      return( 
+      <div>
         TodoApi
+         <button onClick={()=>{
+            setIsModalTwoOpen(true)
+          
+     setEdit(false);
+     setEditUser({});
+
+        }}>Add User</button>
        <div  style={{display:"flex"}}> 
        <div>
         {users.map((user)=><li key={user.id}><span onClick={()=>setSelectedUser(user)}>{user.name}</span>
@@ -95,14 +130,18 @@ const TodoApi = () => {
        
 
       </div>
-      <div style={{marginTop:"30px"}}>
-     <label>Name:</label><input id ="name"value={editUser.name || "" } onChange={handleChange} /> <br/>
-     <label>Phone:</label><input id="phone" value={editUser.phone || "" } onChange={handleChange} /> <br/>
-     <label>Email:</label><input id="email" value={editUser.email || "" } onChange={handleChange} /> <br/>
-      <button disabled={!editUser.id} onClick={handleUpdate}>Update</button>
-      </div>
-      {selectedUser.name && <UserDetails user={selectedUser} onClose={()=>setSelectedUser({})}/>}
+     
+      
+      {selectedUser.name && ( 
+      <Modal onClose={()=>setSelectedUser({})}>
+      <UserDetails 
+      user={selectedUser} 
+      
+      />
+      </Modal>
+       )}
+      {isModalTwoOpen && (<Modal onClose={()=>setIsModalTwoOpen(false)}><CreateUpdate editUser={editUser} handleChange ={handleChange} isEdit={isEdit} handleUpdate={handleUpdate} handleCreate={handleCreate}/></Modal>)}
       </div>    
-)}
+);};
 
 export default TodoApi;
